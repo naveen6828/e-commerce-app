@@ -8,6 +8,8 @@ import com.naveen.ecommerce.orderline.OrderLineRequest;
 import com.naveen.ecommerce.orderline.OrderLineService;
 
 import com.naveen.ecommerce.customer.CustomerClient;
+import com.naveen.ecommerce.payment.PaymentClient;
+import com.naveen.ecommerce.payment.PaymentRequest;
 import com.naveen.ecommerce.product.ProductClient;
 import com.naveen.ecommerce.product.PurchaseRequest;
 import jakarta.persistence.EntityNotFoundException;
@@ -25,7 +27,7 @@ public class OrderService {
     private final OrderRepository repository;
     private final OrderMapper mapper;
     private final CustomerClient customerClient;
-
+    private final PaymentClient paymentClient;
     private final ProductClient productClient;
     private final OrderLineService orderLineService;
     private final OrderProducer orderProducer;
@@ -50,14 +52,14 @@ public class OrderService {
             );
         }
         // toDO Payment
-//        var paymentRequest = new PaymentRequest(
-//                request.amount(),
-//                request.paymentMethod(),
-//                order.getId(),
-//                order.getReference(),
-//                customer
-//        );
-//        paymentClient.requestOrderPayment(paymentRequest);
+        var paymentRequest = new PaymentRequest(
+                request.amount(),
+                request.paymentMethod(),
+                order.getId(),
+                order.getReference(),
+                customer
+        );
+        paymentClient.requestOrderPayment(paymentRequest);
 
         orderProducer.sendOrderConfirmation(
                 new OrderConfirmation(
